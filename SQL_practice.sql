@@ -22,3 +22,18 @@ WHERE   order_delivered_carrier_date LIKE '2017-01%'					-- 2017년 1월에 택�
         AND order_delivered_customer_date IS NULL						-- 배송 완료되지 않은 주문 필터링
 GROUP BY delivered_carrier_date											
 ORDER BY delivered_carrier_date;										-- 일자 오름차순 정렬
+
+/*
+solvesql 쇼핑몰의 일일 매출액
+https://solvesql.com/problems/olist-daily-revenue/
+*/
+
+SELECT  DATE(A.order_purchase_timestamp) AS dt,				-- 구매 날짜만 추출
+        ROUND(SUM(B.payment_value),2) AS revenue_daily		-- 일자별 총 결제 금액을 소수점 둘째자리까지 출력
+FROM    olist_orders_dataset AS A
+INNER JOIN olist_order_payments_dataset AS B				
+ON      A.order_id = B.order_id								-- 두 테이블을 order_id 열을 기준으로 join
+WHERE   dt >= '2018-01-01'									-- dt 열이 2018-01-01 이후인 열만 선택
+GROUP BY dt
+ORDER BY dt;
+
