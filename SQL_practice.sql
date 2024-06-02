@@ -76,3 +76,17 @@ WHERE   day IN (
                 GROUP BY day
                 HAVING  SUM(total_bill) >= 1500		-- 일별 총 결제 금액이 1500 이상인 날짜를 선택
                 )
+                
+                
+/*
+solvesql 레스토랑의 요일별 VIP
+https://solvesql.com/problems/restaurant-vip/
+*/
+
+SELECT  *
+FROM    tips
+WHERE   total_bill IN (
+                       SELECT MAX(total_bill) 		-- 일별 가장 높은 금액의 결제 내역 선택
+                       FROM   tips
+                       GROUP BY day
+                       );
