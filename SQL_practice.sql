@@ -37,3 +37,28 @@ WHERE   dt >= '2018-01-01'									-- dt 열이 2018-01-01 이후인 열만 선�
 GROUP BY dt
 ORDER BY dt;
 
+/*
+solvesql 점검이 필요한 자전거 찾기
+https://solvesql.com/problems/inspection-needed-bike/
+*/
+
+-- 1번 풀이
+SELECT bike_id
+FROM (
+      SELECT bike_id
+      FROM rental_history
+      WHERE rent_at LIKE '2021-01%'		-- 2021년 1월 렌트한 자전거
+      GROUP BY bike_id					
+      HAVING SUM(distance) >= 50000		-- bike_id별 총 주행 거리가 50km 이상인 bike_id만 추출
+      ) AS filtered_bikes;
+      
+-- 2번 풀이
+SELECT  DISTINCT bike_id								-- 중복된 bike_id 제거
+FROM    rental_history
+WHERE   bike_id in (
+                    SELECT  bike_id
+                    FROM    rental_history
+                    WHERE   rent_at LIKE '2021-01%'		-- 2021년 1월 렌트한 자전거
+                    GROUP BY bike_id
+                    HAVING  SUM(distance) >= 50000		-- bike_id별 총 주행 거리가 50km 이상인 bike_id만 추출
+                    );
