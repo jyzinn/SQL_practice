@@ -62,3 +62,17 @@ WHERE   bike_id in (
                     GROUP BY bike_id
                     HAVING  SUM(distance) >= 50000		-- bike_id별 총 주행 거리가 50km 이상인 bike_id만 추출
                     );
+                    
+/*
+solvesql 레스토랑의 대목
+https://solvesql.com/problems/high-season-of-restaurant/
+*/
+
+SELECT  *
+FROM    tips
+WHERE   day IN (
+                SELECT  day
+                FROM    tips
+                GROUP BY day
+                HAVING  SUM(total_bill) >= 1500		-- 일별 총 결제 금액이 1500 이상인 날짜를 선택
+                )
