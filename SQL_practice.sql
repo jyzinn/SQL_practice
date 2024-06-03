@@ -90,3 +90,18 @@ WHERE   total_bill IN (
                        FROM   tips
                        GROUP BY day
                        );
+                       
+/*
+leetcode 512. Game Play Analysis II
+https://leetcode.com/problems/game-play-analysis-ii/description/
+*/
+
+SELECT	player_id,
+		device_id
+FROM	activity
+WHERE	(player_id, event_date) IN (
+									SELECT	player_id,
+											MIN(event_date) AS first_event_date		-- player_id별 최초 event_date 추출
+									FROM	activity
+                                    GROUP BY player_id
+                                    );
