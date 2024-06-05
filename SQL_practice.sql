@@ -105,3 +105,18 @@ WHERE	(player_id, event_date) IN (
 									FROM	activity
                                     GROUP BY player_id
                                     );
+
+/*
+solvesql 복수 국적 메달 수상한 선수 찾기
+https://solvesql.com/problems/multiple-medalist/
+*/
+
+SELECT  a.name
+FROM    records AS r
+INNER JOIN athletes AS a ON r.athlete_id = a.id
+INNER JOIN games    AS g ON r.game_id = g.id
+WHERE   r.medal IS NOT NULL							-- 메달 수상 이력이 있는 선수만
+        AND g.year >= 2000							-- 2000년 이후의 기록만
+GROUP BY a.id
+HAVING  COUNT(DISTINCT r.team_id) >= 2				-- 국적이 2개 이상인 선수만
+ORDER BY 1;
