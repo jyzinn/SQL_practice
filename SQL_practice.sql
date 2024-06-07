@@ -134,3 +134,16 @@ SELECT  payment_installments,
 FROM    olist_order_payments_dataset
 WHERE   payment_type == 'credit_card'
 GROUP BY payment_installments;
+
+/*
+solvesql 지역별 주문의 특징
+https://solvesql.com/problems/characteristics-of-orders/
+*/
+
+SELECT  region AS Region,
+        COUNT(DISTINCT(CASE WHEN category='Furniture' THEN order_id END)) AS 'Furniture',
+        COUNT(DISTINCT(CASE WHEN category='Office Supplies' THEN order_id END)) AS 'Office Supplies',
+        COUNT(DISTINCT(CASE WHEN category='Technology' THEN order_id END)) AS 'Technology'
+FROM    records
+GROUP BY Region
+ORDER BY Region;
