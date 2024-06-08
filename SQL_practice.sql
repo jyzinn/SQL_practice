@@ -147,3 +147,18 @@ SELECT  region AS Region,
 FROM    records
 GROUP BY Region
 ORDER BY Region;
+
+/*
+solvesql 배송 예정일 예측 성공과 실패
+https://solvesql.com/problems/estimated-delivery-date/
+*/
+
+SELECT  DATE(order_purchase_timestamp) AS purchase_date,
+		-- 예상 배송 날짜가 실제 배송 날짜보다 크거나 같을 때 (배송 예정 시각 안에 도착)
+        COUNT(DISTINCT CASE WHEN order_estimated_delivery_date >= order_delivered_customer_date THEN order_id END) AS success,
+        -- 예상 배송 날짜가 실제 배송 날짜보다 작을 때 (배송 예정 시각 이후에 도착)
+        COUNT(DISTINCT CASE WHEN order_estimated_delivery_date <  order_delivered_customer_date THEN order_id END) AS fail
+FROM    olist_orders_dataset
+WHERE   purchase_date LIKE '2017-01%'
+GROUP BY purchase_date
+ORDER BY purchase_date;
