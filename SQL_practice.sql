@@ -162,3 +162,19 @@ FROM    olist_orders_dataset
 WHERE   purchase_date LIKE '2017-01%'
 GROUP BY purchase_date
 ORDER BY purchase_date;
+
+/*
+solvesql 쇼핑몰의 일일 매출액과 ARPPU
+https://solvesql.com/problems/daily-arppu/
+*/
+
+SELECT  DATE(o.order_purchase_timestamp) AS dt,
+        COUNT(DISTINCT o.customer_id) AS pu,										-- 해당 일자의 결제 고객 수
+        ROUND(SUM(p.payment_value),2) AS revenue_daily,								-- 해당 일자의 매출액
+        ROUND(SUM(p.payment_value) / COUNT(DISTINCT o.customer_id), 2) AS arppu		-- 해당 일자의 arppu
+FROM    olist_orders_dataset AS o
+INNER JOIN olist_order_payments_dataset AS p
+ON      o.order_id = p.order_id
+WHERE   o.order_purchase_timestamp >= '2018-01-01'									-- 2018년 1월 1일 이후 매출
+GROUP BY dt												
+ORDER BY dt;
