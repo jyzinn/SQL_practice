@@ -178,3 +178,19 @@ ON      o.order_id = p.order_id
 WHERE   o.order_purchase_timestamp >= '2018-01-01'									-- 2018년 1월 1일 이후 매출
 GROUP BY dt												
 ORDER BY dt;
+
+/*
+ssolvesql 멘토링 짝꿍 리스트
+https://solvesql.com/problems/mentor-mentee-list/
+*/
+
+SELECT  A.employee_id AS mentee_id,
+        A.name AS mentee_name,
+        B.employee_id AS mentor_id,
+        B.name AS mentor_name
+FROM    employees AS A
+CROSS JOIN employees AS B
+WHERE   A.join_date BETWEEN '2021-10-01' AND '2021-12-31'	-- 2021년 12월 31일 기준 3개월 이내 입사한 인원 == 멘티
+        AND B.join_date <= '2019-12-31'						-- 멘토는 재직한지 2년 이상
+        AND A.department != B.department					-- 멘티와 멘토는 서로 다른 부서
+ORDER BY mentee_id, mentor_id;
