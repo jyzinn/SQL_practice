@@ -194,3 +194,16 @@ WHERE   A.join_date BETWEEN '2021-10-01' AND '2021-12-31'	-- 2021년 12월 31일
         AND B.join_date <= '2019-12-31'						-- 멘토는 재직한지 2년 이상
         AND A.department != B.department					-- 멘티와 멘토는 서로 다른 부서
 ORDER BY mentee_id, mentor_id;
+
+/*
+solvesql 작품이 없는 작가 찾기
+https://solvesql.com/problems/artists-without-artworks/
+*/
+
+SELECT  A.artist_id,
+        A.name
+FROM    artists AS A
+LEFT JOIN artworks_artists AS B
+ON      A.artist_id = B.artist_id
+WHERE   A.death_year IS NOT NULL		-- 살아있지 않은 작가
+        AND B.artist_id IS NULL;		-- MoMA에 작품이 등록되지 않은 작가
