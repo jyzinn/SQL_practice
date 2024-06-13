@@ -207,3 +207,21 @@ LEFT JOIN artworks_artists AS B
 ON      A.artist_id = B.artist_id
 WHERE   A.death_year IS NOT NULL		-- 살아있지 않은 작가
         AND B.artist_id IS NULL;		-- MoMA에 작품이 등록되지 않은 작가
+        
+/*
+solvesql 가구 판매의 비중이 높았던 날 찾기
+https://solvesql.com/problems/day-of-furniture/
+*/
+
+SELECT  order_date,
+		-- 해당 일자의 Furniture 카테고리 주문 수
+        COUNT(DISTINCT CASE WHEN category = 'Furniture' THEN order_id END) AS furniture,	
+        -- 해당 일자의 Furniture 카테고리 주문 비율
+        ROUND(
+            (COUNT(DISTINCT CASE WHEN category = 'Furniture' THEN order_id END) * 1.0 / COUNT(DISTINCT order_id)) * 100, 2
+        ) AS furniture_pct
+FROM    records
+GROUP BY order_date
+HAVING  COUNT(DISTINCT order_id) >= 10	-- 하루 10건 이상의 주문이 발생한 날
+        AND furniture_pct >= 40			-- Furniture 카테고리 주문 비율이 40% 이상인 날
+ORDER BY furniture_pct DESC;
