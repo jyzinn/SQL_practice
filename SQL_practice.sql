@@ -225,3 +225,23 @@ GROUP BY order_date
 HAVING  COUNT(DISTINCT order_id) >= 10	-- 하루 10건 이상의 주문이 발생한 날
         AND furniture_pct >= 40			-- Furniture 카테고리 주문 비율이 40% 이상인 날
 ORDER BY furniture_pct DESC;
+
+/*
+solvesql 레스토랑 요일 별 구매금액 Top 3 영수증
+https://solvesql.com/problems/top-3-bill/
+*/
+
+WITH RankedBills AS (
+                     SELECT day,
+                             time,
+                             sex,
+                             total_bill,
+                             DENSE_RANK() OVER (PARTITION BY day ORDER BY total_bill DESC) AS rank	-- 중복 순위 구하기
+                     FROM    tips
+                     )
+SELECT  day,
+        time,
+        sex,
+        total_bill
+FROM    RankedBills
+WHERE   rank <= 3;		-- rank가 3위 이상인 경우만
