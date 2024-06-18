@@ -245,3 +245,16 @@ SELECT  day,
         total_bill
 FROM    RankedBills
 WHERE   rank <= 3;		-- rank가 3위 이상인 경우만
+
+/*
+LeetCode 608. Tree Node
+https://leetcode.com/problems/tree-node/description/
+*/
+
+SELECT  id,
+        CASE 
+            WHEN p_id IS NULL THEN 'Root'						-- p_id가 없을 경우 Root
+            WHEN id IN (SELECT p_id FROM tree) then 'Inner'		-- p_id가 있고 다른 노드의 p_id일 경우 Inner
+            ELSE 'Leaf'											-- p_id가 있지만 다른 노드의 p_id가 아닐 경우 Leaf
+        END AS type
+FROM    tree;
