@@ -1,5 +1,7 @@
 USE olist_project;
 
+-- EDA
+
 -- 지역별 유저 분포 조회
 SELECT customer_state,								-- 고객의 주
        customer_city,								-- 고객의 도시
@@ -38,3 +40,19 @@ SELECT	YEAR(order_purchase_timestamp) AS purchase_year,   																		-- �
 FROM    orders
 GROUP BY YEAR(order_purchase_timestamp), MONTH(order_purchase_timestamp) WITH ROLLUP 											-- 연도와 월별로 그룹화하고 ROLLUP을 사용하여 소계를 계산
 ORDER BY purchase_year, purchase_month; 																						-- 연도와 월별로 정렬
+
+-- payment type별 평균 value
+SELECT	payment_type,
+		ROUND(AVG(payment_value), 2) AS avg_value
+FROM	order_payments
+GROUP BY payment_type;
+
+-- 카테고리별 평균 가격
+SELECT	B.product_category_name,
+        ROUND(AVG(A.price), 2) AS category_avg_price,
+        ROUND(AVG(A.freight_value), 2) AS category_avg_freight_value
+FROM	order_items AS A
+INNER JOIN products AS B
+ON		A.product_id = B.product_id
+GROUP BY B.product_category_name
+ORDER BY B.product_category_name;
