@@ -85,3 +85,11 @@ SELECT  ROUND(AVG(daily_fee)) AS average_fee
 FROM    car_rental_company_car
 		-- 자동차 종류가 SUV인 경우만 조회
 WHERE   car_type = 'SUV';
+
+/*
+인기있는 아이스크림
+https://school.programmers.co.kr/learn/courses/30/lessons/133024
+*/
+SELECT  flavor
+FROM    first_half
+ORDER BY total_order DESC, shipment_id;
