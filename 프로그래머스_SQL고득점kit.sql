@@ -75,3 +75,13 @@ ON      A.flavor = B.flavor
 WHERE   total_order > 3000
         AND ingredient_type = 'fruit_based'
 ORDER BY total_order DESC;
+
+/*
+평균 일일 대여 요금 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/151136
+*/
+		-- 평균 일일 대여 요금 소수 첫번째 자리에서 반올림
+SELECT  ROUND(AVG(daily_fee)) AS average_fee
+FROM    car_rental_company_car
+		-- 자동차 종류가 SUV인 경우만 조회
+WHERE   car_type = 'SUV';
