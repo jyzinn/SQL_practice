@@ -17,7 +17,6 @@ ORDER BY published_date;
 조건에 부합하는 중고거래 댓글 조회하기
 https://school.programmers.co.kr/learn/courses/30/lessons/164673
 */
-
 SELECT  A.title,
         A.board_id,
         B.reply_id,
@@ -37,7 +36,6 @@ ORDER BY B.created_date, A.title;
 3월에 태어난 여성 회원 목록 출력하기
 https://school.programmers.co.kr/learn/courses/30/lessons/131120
 */
-
 SELECT  member_id,
         member_name,
         gender,
@@ -54,7 +52,6 @@ ORDER BY member_id;
 흉부외과 또는 일반외과 의사 목록 출력하기
 https://school.programmers.co.kr/learn/courses/30/lessons/132203
 */
-
 SELECT  dr_name,
         dr_id,
         mcdp_cd,
@@ -64,3 +61,17 @@ FROM    doctor
 		-- 진료과가 흉부외과(CS)이거나 일반외과(GS)인 의사만 조회
 WHERE   mcdp_cd IN ('CS', 'GS')
 ORDER BY hire_ymd DESC, dr_name;
+
+/*
+과일로 만든 아이스크림 고르기
+https://school.programmers.co.kr/learn/courses/30/lessons/133025
+*/
+SELECT  A.flavor
+FROM    first_half AS A
+		-- flavor로 JOIN
+INNER JOIN icecream_info AS B
+ON      A.flavor = B.flavor
+		-- 총 주문량이 3,000보다 높은 주 성분이 과일인 아이스크림 조회
+WHERE   total_order > 3000
+        AND ingredient_type = 'fruit_based'
+ORDER BY total_order DESC;
