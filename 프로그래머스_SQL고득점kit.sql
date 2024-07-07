@@ -32,3 +32,20 @@ ON      A.board_id = B.board_id
 		-- 2022년 10월에 작성된 게시글만 조회
 WHERE   A.created_date LIKE '2022-10%'
 ORDER BY B.created_date, A.title;
+
+/*
+3월에 태어난 여성 회원 목록 출력하기
+https://school.programmers.co.kr/learn/courses/30/lessons/131120
+*/
+
+SELECT  member_id,
+        member_name,
+        gender,
+        -- 출력 요구 형식에 맞추어 포맷팅
+        DATE_FORMAT(date_of_birth, '%Y-%m-%d') AS date_of_birth
+FROM    member_profile
+		-- 생일이 3월인 여성 회원, 전화번호가 NULL이 아닌 경우만 조회
+WHERE   MONTH(date_of_birth) = 3
+        AND gender = 'w'
+        AND tlno IS NOT NULL
+ORDER BY member_id;
