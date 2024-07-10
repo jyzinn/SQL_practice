@@ -105,3 +105,19 @@ FROM    food_factory
 -- 강원도에 위치한 공장 조회
 WHERE   address LIKE '강원도%'
 ORDER BY factory_id;
+
+/*
+12세 이하인 여자 환자 목록 출력하기
+https://school.programmers.co.kr/learn/courses/30/lessons/132201
+*/
+SELECT  pt_name,
+        pt_no,
+        gend_cd,
+        age,
+        -- 전화번호가 없는 경우 'NONE' 출력
+        IFNULL(tlno, 'NONE') AS tlno
+FROM    patient
+		-- 12세 이하인 여자 환자만 조회
+WHERE   age <= 12
+        AND gend_cd = 'w'
+ORDER BY age DESC, pt_name;
