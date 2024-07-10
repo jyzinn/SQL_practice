@@ -157,3 +157,25 @@ https://school.programmers.co.kr/learn/courses/30/lessons/59034
 SELECT  *
 FROM    animal_ins
 ORDER BY animal_id;
+
+/*
+오프라인/온라인 판매 데이터 통합하기
+https://school.programmers.co.kr/learn/courses/30/lessons/131537
+*/
+SELECT  DATE_FORMAT(sales_date, '%Y-%m-%d') AS sales_date,	-- 출력 요구 형식에 맞추어 포맷팅
+        product_id,
+        user_id,
+        sales_amount
+FROM    online_sale
+WHERE   sales_date LIKE '2022-03%'							-- 22년 3월 판매 데이터만 조회
+
+UNION ALL
+
+SELECT  DATE_FORMAT(sales_date, '%Y-%m-%d') AS sales_date,	-- 출력 요구 형식에 맞추어 포맷팅
+        product_id,
+        NULL AS user_id,									-- offline_sale에는 user_id가 없기에 null로 처리
+        sales_amount
+FROM    offline_sale
+WHERE   sales_date LIKE '2022-03%'							-- 22년 3월 판매 데이터만 조회
+
+ORDER BY sales_date, product_id, user_id;
