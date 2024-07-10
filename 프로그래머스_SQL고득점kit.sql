@@ -93,3 +93,15 @@ https://school.programmers.co.kr/learn/courses/30/lessons/133024
 SELECT  flavor
 FROM    first_half
 ORDER BY total_order DESC, shipment_id;
+
+/*
+강원도에 위치한 생산공장 목록 출력하기
+https://school.programmers.co.kr/learn/courses/30/lessons/131112
+*/
+SELECT  factory_id,
+        factory_name,
+        address
+FROM    food_factory
+-- 강원도에 위치한 공장 조회
+WHERE   address LIKE '강원도%'
+ORDER BY factory_id;
