@@ -297,3 +297,11 @@ WHERE   skill_code & (									-- 비트 마스크와 skill_code를 비트 연�
                      WHERE  name IN ('Python','C#')
                      )
 ORDER BY id;
+
+/*
+잔챙이 잡은 수 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/293258
+*/
+SELECT  COUNT(id) AS fish_count
+FROM    fish_info
+WHERE   length IS NULL;				-- 길이가 10cm 이하인 물고기는 length가 NULL
