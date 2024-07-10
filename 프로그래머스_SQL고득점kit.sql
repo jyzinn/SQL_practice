@@ -138,3 +138,14 @@ ON      A.rest_id = B.rest_id					-- rest_id를 key로 join
 WHERE   address LIKE '서울%'						-- 서울에 위치한 식당만 조회
 GROUP BY rest_id								-- rest_id별 평균 점수 조회를 위해 group
 ORDER BY score DESC, favorites DESC;
+
+/*
+재구매가 일어난 상품과 회원 리스트 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/131536
+*/
+SELECT  user_id,
+        product_id
+FROM    online_sale
+GROUP BY user_id, product_id			-- 재구매 판단을 위해 group
+HAVING  COUNT(sales_date) >= 2			-- sales_date가 2 이상인 경우만 조회 (재구매)
+ORDER BY user_id, product_id DESC;
