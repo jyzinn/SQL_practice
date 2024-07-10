@@ -350,3 +350,12 @@ SELECT  id,
         END AS size
 FROM    ecoli_data
 ORDER BY id;
+
+/*
+특정 형질을 가지는 대장균 찾기
+https://school.programmers.co.kr/learn/courses/30/lessons/301646
+*/
+SELECT  COUNT(*) AS count
+FROM    ecoli_data
+WHERE   genotype & 2 = 0								-- 2번 형질을 보유하지 않음 '0010'
+		AND (genotype & 1 != 0 OR genotype & 4 != 0);	-- 1번 형질을 보유하거나 3번 형질을 보유함 '0001' or '0100'
