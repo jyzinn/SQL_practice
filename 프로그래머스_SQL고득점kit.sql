@@ -315,3 +315,13 @@ SELECT  id,
 FROM    fish_info
 ORDER BY length DESC, id
 LIMIT   10;
+
+/*
+특정 물고기를 잡은 총 수 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/298518
+*/
+SELECT  COUNT(*) AS fish_count
+FROM    fish_info AS A
+INNER JOIN fish_name_info AS B
+ON      A.fish_type = B.fish_type
+WHERE   fish_name IN ('BASS', 'SNAPPER');	-- 'BASS'나 'SNAPPER'를 잡은 것만 조회
