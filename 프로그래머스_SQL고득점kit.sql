@@ -305,3 +305,13 @@ https://school.programmers.co.kr/learn/courses/30/lessons/293258
 SELECT  COUNT(id) AS fish_count
 FROM    fish_info
 WHERE   length IS NULL;				-- 길이가 10cm 이하인 물고기는 length가 NULL
+
+/*
+가장 큰 물고기 10마리 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/298517
+*/
+SELECT  id,
+        length
+FROM    fish_info
+ORDER BY length DESC, id
+LIMIT   10;
