@@ -337,3 +337,16 @@ LEFT JOIN ecoli_data AS B				-- 자식 id를 나타내는 테이블
 ON      A.id = B.parent_id				-- 부모-자식 관계 정의
 GROUP BY A.id
 ORDER BY A.id;
+
+/*
+대장균의 크기에 따라 분류하기 1
+https://school.programmers.co.kr/learn/courses/30/lessons/299307
+*/
+SELECT  id,
+        CASE
+            WHEN size_of_colony <= 100 THEN 'LOW'		-- 크기가 100 이하면 'LOW'
+            WHEN size_of_colony <= 1000 THEN 'MEDIUM'	-- 크기가 1000 이하면 'MEDIUM'
+            ELSE 'HIGH'									-- 그 외 크기는 'HIGH'
+        END AS size
+FROM    ecoli_data
+ORDER BY id;
