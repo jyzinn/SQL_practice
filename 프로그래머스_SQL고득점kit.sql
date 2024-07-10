@@ -252,3 +252,20 @@ SELECT  COUNT(user_id) AS users
 FROM    user_info
 WHERE   joined LIKE '2021%'
         AND age BETWEEN 20 AND 29;
+        
+/*
+업그레이드 된 아이템 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/273711
+*/
+SELECT  A.item_id,
+        A.item_name,
+        A.rarity
+FROM    item_info AS A
+INNER JOIN item_tree AS B
+ON      A.item_id = B.item_id
+WHERE   B.parent_item_id IN (							-- parent_item의 희귀도가 'RARE'인 item
+                            SELECT  item_id
+                            FROM    item_info
+                            WHERE   rarity = 'RARE'		-- 아이템 희귀도가 'RARE'인 아이템 조회
+                            )
+ORDER BY item_id DESC;
