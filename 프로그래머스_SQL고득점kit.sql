@@ -179,3 +179,12 @@ FROM    offline_sale
 WHERE   sales_date LIKE '2022-03%'							-- 22년 3월 판매 데이터만 조회
 
 ORDER BY sales_date, product_id, user_id;
+
+/*
+역순 정렬하기
+https://school.programmers.co.kr/learn/courses/30/lessons/59035
+*/
+SELECT  name,
+        datetime
+FROM    animal_ins
+ORDER BY animal_id DESC;
