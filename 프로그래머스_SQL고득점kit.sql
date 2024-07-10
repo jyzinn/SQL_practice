@@ -372,3 +372,37 @@ LEFT JOIN ecoli_data AS B						-- 자식 id를 나타내는 테이블
 ON      A.id = B.parent_id						-- 부모-자식 관계 정의
 WHERE   A.genotype & B.genotype = B.genotype	-- 비트 연산으로 자식이 부모의 모든 형질을 보유한 것만 조회
 ORDER BY id;
+
+/*
+대장균의 크기에 따라 분류하기 2
+https://school.programmers.co.kr/learn/courses/30/lessons/301649
+*/
+SELECT  id,
+        CASE
+            WHEN quartile  = 1 THEN 'CRITICAL'
+            WHEN quartile  = 2 THEN 'HIGH'
+            WHEN quartile  = 3 THEN 'MEDIUM'
+            ELSE 'LOW'
+        END AS colony_name
+FROM    (
+        SELECT  id,
+                NTILE(4) OVER(ORDER BY size_of_colony DESC) AS quartile		-- 개체 크기 내림차순으로 사분위로 나눔
+        FROM    ecoli_data
+        ) AS ranked_data
+ORDER BY id;
+
+WITH ranked_data AS(
+                    SELECT  id,
+                            NTILE(4) OVER (ORDER BY size_of_colony DESC) AS quartile	-- 개체 크기 내림차순으로 사분위로 나눔
+                    FROM    ecoli_data
+                    )
+                    
+SELECT  id,
+        CASE
+            WHEN quartile = 1 THEN 'CRITICAL'
+            WHEN quartile = 2 THEN 'HIGH'
+            WHEN quartile = 3 THEN 'MEDIUM'
+            ELSE 'LOW'
+        END AS colony_name
+FROM    ranked_data
+ORDER BY id;
