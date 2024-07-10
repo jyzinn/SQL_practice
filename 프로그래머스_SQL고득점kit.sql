@@ -269,3 +269,15 @@ WHERE   B.parent_item_id IN (							-- parent_item의 희귀도가 'RARE'인 ite
                             WHERE   rarity = 'RARE'		-- 아이템 희귀도가 'RARE'인 아이템 조회
                             )
 ORDER BY item_id DESC;
+
+/*
+Python 개발자 찾기
+https://school.programmers.co.kr/learn/courses/30/lessons/276013
+*/
+SELECT  id,
+        email,
+        first_name,
+        last_name
+FROM    developer_infos
+WHERE   'Python' IN (skill_1, skill_2, skill_3)		-- skill 중 'Python'이 포함된 경우만 조회
+ORDER BY id;
