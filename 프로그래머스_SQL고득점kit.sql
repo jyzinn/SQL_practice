@@ -325,3 +325,15 @@ FROM    fish_info AS A
 INNER JOIN fish_name_info AS B
 ON      A.fish_type = B.fish_type
 WHERE   fish_name IN ('BASS', 'SNAPPER');	-- 'BASS'나 'SNAPPER'를 잡은 것만 조회
+
+/*
+대장균들의 자식의 수 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/299305
+*/
+SELECT  A.id,
+        COUNT(B.id) AS child_count
+FROM    ecoli_data AS A					-- 부모 id를 나타내는 테이블
+LEFT JOIN ecoli_data AS B				-- 자식 id를 나타내는 테이블
+ON      A.id = B.parent_id				-- 부모-자식 관계 정의
+GROUP BY A.id
+ORDER BY A.id;
