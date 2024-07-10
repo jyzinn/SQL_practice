@@ -149,3 +149,11 @@ FROM    online_sale
 GROUP BY user_id, product_id			-- 재구매 판단을 위해 group
 HAVING  COUNT(sales_date) >= 2			-- sales_date가 2 이상인 경우만 조회 (재구매)
 ORDER BY user_id, product_id DESC;
+
+/*
+모든 레코드 조회하기
+https://school.programmers.co.kr/learn/courses/30/lessons/59034
+*/
+SELECT  *
+FROM    animal_ins
+ORDER BY animal_id;
