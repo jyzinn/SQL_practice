@@ -281,3 +281,19 @@ SELECT  id,
 FROM    developer_infos
 WHERE   'Python' IN (skill_1, skill_2, skill_3)		-- skill 중 'Python'이 포함된 경우만 조회
 ORDER BY id;
+
+/*
+조건에 맞는 개발자 찾기
+https://school.programmers.co.kr/learn/courses/30/lessons/276034
+*/
+SELECT  id,
+        email,
+        first_name, 
+        last_name
+FROM    developers
+WHERE   skill_code & (									-- 비트 마스크와 skill_code를 비트 연산하여 'Python' 또는 'C#'을 보유한 개발자를 필터링
+                     SELECT SUM(code)					-- 비트 마스크 생성
+                     FROM   skillcodes
+                     WHERE  name IN ('Python','C#')
+                     )
+ORDER BY id;
