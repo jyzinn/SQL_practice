@@ -406,3 +406,22 @@ SELECT  id,
         END AS colony_name
 FROM    ranked_data
 ORDER BY id;
+
+/*
+특정 세대의 대장균 찾기
+https://school.programmers.co.kr/learn/courses/30/lessons/301650
+*/
+WITH 1st_gen AS (
+                SELECT  id
+                FROM    ecoli_data
+                WHERE   parent_id IS NULL
+                )
+
+SELECT  gen3.id
+FROM    1st_gen AS gen1				-- 1세대 대장균 테이블
+LEFT JOIN ecoli_data AS gen2		-- 2세대 대장균 테이블
+ON      gen1.id = gen2.parent_id	-- 1세대-2세대 관계 정의
+LEFT JOIN ecoli_data AS gen3		-- 3세대 대장균 테이블
+ON      gen2.id = gen3.parent_id	-- 2세대-3세대 관계 정의
+WHERE   gen3.id IS NOT NULL			-- 3세대 ID 출력이 필요하므로 NOT NULL 조건
+ORDER BY gen3.id;
