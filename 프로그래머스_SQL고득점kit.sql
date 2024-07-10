@@ -359,3 +359,16 @@ SELECT  COUNT(*) AS count
 FROM    ecoli_data
 WHERE   genotype & 2 = 0								-- 2번 형질을 보유하지 않음 '0010'
 		AND (genotype & 1 != 0 OR genotype & 4 != 0);	-- 1번 형질을 보유하거나 3번 형질을 보유함 '0001' or '0100'
+        
+/*
+부모의 형질을 모두 가지는 대장균 찾기
+https://school.programmers.co.kr/learn/courses/30/lessons/301647
+*/
+SELECT  A.id,
+        A.genotype,
+        B.genotype AS parent_genotype
+FROM    ecoli_data AS A							-- 부모 id를 나타내는 테이블
+LEFT JOIN ecoli_data AS B						-- 자식 id를 나타내는 테이블
+ON      A.id = B.parent_id						-- 부모-자식 관계 정의
+WHERE   A.genotype & B.genotype = B.genotype	-- 비트 연산으로 자식이 부모의 모든 형질을 보유한 것만 조회
+ORDER BY id;
