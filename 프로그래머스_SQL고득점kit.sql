@@ -121,3 +121,20 @@ FROM    patient
 WHERE   age <= 12
         AND gend_cd = 'w'
 ORDER BY age DESC, pt_name;
+
+/*
+서울에 위치한 식당 목록 출력하기
+https://school.programmers.co.kr/learn/courses/30/lessons/131118
+*/
+SELECT  A.rest_id,
+        A.rest_name,
+        A.food_type,
+        A.favorites,
+        A.address,
+        ROUND(AVG(B.review_score),2) AS score	-- 평균 점수는 소수 세번째 자리에서 반올림
+FROM    rest_info AS A
+INNER JOIN rest_review AS B
+ON      A.rest_id = B.rest_id					-- rest_id를 key로 join
+WHERE   address LIKE '서울%'						-- 서울에 위치한 식당만 조회
+GROUP BY rest_id								-- rest_id별 평균 점수 조회를 위해 group
+ORDER BY score DESC, favorites DESC;
