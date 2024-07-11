@@ -532,3 +532,10 @@ WHERE   (A.fish_type, A.length) IN (						-- fish_type별 최대 길이 조회
                                     GROUP BY fish_type
                                     )
 ORDRE BY id;
+
+/*
+잡은 물고기 중 가장 큰 물고기의 길이 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/298515
+*/
+SELECT  CONCAT(MAX(length), 'cm') AS max_length
+FROM    fish_info;
