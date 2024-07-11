@@ -455,3 +455,26 @@ ON      g1.id = g2.parent_id
 WHERE   g2.id IS NULL					-- 자식이 없는 개체만 조회
 GROUP BY g1.generation
 ORDER BY g1.generation;
+
+-- SUM, MAX, MIN
+/*
+가격이 제일 비싼 식품의 정보 출력하기
+https://school.programmers.co.kr/learn/courses/30/lessons/131115
+*/
+SELECT  product_id,
+        product_name,
+        product_cd,
+        category,
+        price
+FROM    food_product
+WHERE   price = (						-- 가격이 가장 비싼 식품만 조회
+                SELECT MAX(price)
+                FROM   food_product
+                );
+                
+/*
+가장 비싼 상품 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/131697
+*/
+SELECT  MAX(price) AS max_price
+FROM    product;
