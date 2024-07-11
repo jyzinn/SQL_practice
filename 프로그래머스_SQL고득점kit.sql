@@ -478,3 +478,10 @@ https://school.programmers.co.kr/learn/courses/30/lessons/131697
 */
 SELECT  MAX(price) AS max_price
 FROM    product;
+
+/*
+최댓값 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/59415
+*/
+SELECT  MAX(datetime) AS 시간
+FROM    animal_ins;
