@@ -514,3 +514,21 @@ https://school.programmers.co.kr/learn/courses/30/lessons/273709
 SELECT  SUM(price) AS total_price
 FROM    item_info
 WHERE   rarity = 'LEGEND';
+
+/*
+물고기 종류 별 대어 찾기
+https://school.programmers.co.kr/learn/courses/30/lessons/293261
+*/
+SELECT  A.id,
+        B.fish_name,
+        A.length
+FROM    fish_info AS A
+INNER JOIN fish_name_info AS B
+ON      A.fish_type = B.fish_type
+WHERE   (A.fish_type, A.length) IN (						-- fish_type별 최대 길이 조회	
+                                    SELECT  fish_type,
+                                            MAX(length)		
+                                    FROM    fish_info
+                                    GROUP BY fish_type
+                                    )
+ORDRE BY id;
