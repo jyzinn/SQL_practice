@@ -425,3 +425,33 @@ LEFT JOIN ecoli_data AS gen3		-- 3세대 대장균 테이블
 ON      gen2.id = gen3.parent_id	-- 2세대-3세대 관계 정의
 WHERE   gen3.id IS NOT NULL			-- 3세대 ID 출력이 필요하므로 NOT NULL 조건
 ORDER BY gen3.id;
+
+/*
+멸종위기의 대장균 찾기
+https://school.programmers.co.kr/learn/courses/30/lessons/301651
+*/
+WITH RECURSIVE generation AS (											-- 재귀적 CTE
+                             SELECT id,
+                                    parent_id,
+                                    1 AS generation						-- parent_id가 없는 세대를 1세대
+                             FROM   ecoli_data
+                             WHERE  parent_id IS NULL
+    
+                             UNION ALL
+                             
+                             SELECT e.id,
+                                    e.parent_id,
+                                    g.generation + 1 AS generation		-- join하며 generation 값 1씩 증가
+                             FROM   ecoli_data AS e
+                             INNER JOIN generation AS g 				-- 1세대 부모 id와 2세대 자식 id를 join
+							 ON		e.parent_id = g.id
+                             )
+                             
+SELECT  COUNT(g1.id) AS count,
+        g1.generation AS generation
+FROM    generation AS g1
+LEFT JOIN generation AS g2
+ON      g1.id = g2.parent_id
+WHERE   g2.id IS NULL					-- 자식이 없는 개체만 조회
+GROUP BY g1.generation
+ORDER BY g1.generation;
