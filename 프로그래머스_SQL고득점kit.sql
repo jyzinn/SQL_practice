@@ -558,3 +558,17 @@ FROM    ecoli_data AS A
 LEFT JOIN ecoli_size AS B											-- CTE와 year를 기준으로 LEFT JOIN
 ON      YEAR(A.differentiation_date) = B.year	
 ORDER BY year, year_dev;
+
+-- GROUP BY
+/*
+자동차 종류 별 특정 옵션이 포함된 자동차 수 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/151137
+*/
+SELECT  car_type,
+        COUNT(*) AS cars
+FROM    car_rental_company_car
+WHERE   FIND_IN_SET('통풍시트', options) != 0			-- option에 통풍시트/열선시트/가죽시트 중 하나라도 있는 것만 조회
+        OR FIND_IN_SET('열선시트', options) != 0
+        OR FIND_IN_SET('가죽시트', options) != 0
+GROUP BY car_type
+ORDER BY car_type;
