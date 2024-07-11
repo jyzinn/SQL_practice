@@ -499,3 +499,10 @@ https://school.programmers.co.kr/learn/courses/30/lessons/59406
 */
 SELECT  COUNT(*) AS count
 FROM    animal_ins;
+
+/*
+중복 제거하기
+https://school.programmers.co.kr/learn/courses/30/lessons/59408
+*/
+SELECT  COUNT(DISTINCT name) AS count
+FROM    animal_ins;
