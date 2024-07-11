@@ -585,3 +585,18 @@ ON      A.flavor = B.flavor
 GROUP BY B.ingredient_type						-- type별 주문량 집계를 위해 group
 ORDER BY total_order;
 ORDER BY car_type;
+
+/*
+조건에 맞는 사용자와 총 거래금액 조회하기
+https://school.programmers.co.kr/learn/courses/30/lessons/164668
+*/
+SELECT  B.user_id,
+        B.nickname,
+        SUM(A.price) AS total_sales
+FROM    used_goods_board AS A
+INNER JOIN used_goods_user AS B			-- 게시판 작성자 id와 유저 id로 join
+ON      A.writer_id = B.user_id
+WHERE   A.status = 'DONE'				-- 완료된 중고 거래만 조회
+GROUP BY B.user_id						-- 유저의 총 거래 금액 집계를 위해 group
+HAVING  total_sales >= 700000			-- 총 거래 금액이 70만원 이상인 유저만 조회
+ORDER BY total_sales;
