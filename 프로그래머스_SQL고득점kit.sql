@@ -506,3 +506,11 @@ https://school.programmers.co.kr/learn/courses/30/lessons/59408
 */
 SELECT  COUNT(DISTINCT name) AS count
 FROM    animal_ins;
+
+/*
+조건에 맞는 아이템들의 가격의 총합 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/273709
+*/
+SELECT  SUM(price) AS total_price
+FROM    item_info
+WHERE   rarity = 'LEGEND';
