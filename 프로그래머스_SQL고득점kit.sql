@@ -485,3 +485,10 @@ https://school.programmers.co.kr/learn/courses/30/lessons/59415
 */
 SELECT  MAX(datetime) AS 시간
 FROM    animal_ins;
+
+/*
+최솟값 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/59038
+*/
+SELECT  MIN(datetime) AS 시간
+FROM    animal_ins;
