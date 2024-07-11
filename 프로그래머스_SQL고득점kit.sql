@@ -572,3 +572,15 @@ WHERE   FIND_IN_SET('통풍시트', options) != 0			-- option에 통풍시트/�
         OR FIND_IN_SET('가죽시트', options) != 0
 GROUP BY car_type
 ORDER BY car_type;
+
+/*
+성분으로 구분한 아이스크림 총 주문량
+https://school.programmers.co.kr/learn/courses/30/lessons/133026
+*/
+SELECT  B.ingredient_type,
+        SUM(A.total_order) AS total_order
+FROM    first_half AS A
+INNER JOIN icecream_info AS B
+ON      A.flavor = B.flavor
+GROUP BY B.ingredient_type						-- type별 주문량 집계를 위해 group
+ORDER BY total_order;
