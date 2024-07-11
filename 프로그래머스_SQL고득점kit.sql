@@ -530,7 +530,7 @@ WHERE   (A.fish_type, A.length) IN (						-- fish_type별 최대 길이 조회
                                             MAX(length)		
                                     FROM    fish_info
                                     GROUP BY fish_type
-                                    )
+									)
 ORDRE BY id;
 
 /*
@@ -539,3 +539,22 @@ https://school.programmers.co.kr/learn/courses/30/lessons/298515
 */
 SELECT  CONCAT(MAX(length), 'cm') AS max_length
 FROM    fish_info;
+
+/*
+연도별 대장균 크기의 편차 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/299310
+*/
+WITH ecoli_size AS (												-- 각 연도의 가장 큰 크기로 구성된 CTE
+                    SELECT  YEAR(differentiation_date) AS year,
+                            MAX(size_of_colony) AS max_size
+                    FROM    ecoli_data
+                    GROUP BY year
+                    )
+                    
+SELECT  YEAR(differentiation_date) AS year,
+        B.max_size - A.size_of_colony AS year_dev,					-- 대장균 크기 편차 구하기
+        A.id
+FROM    ecoli_data AS A
+LEFT JOIN ecoli_size AS B											-- CTE와 year를 기준으로 LEFT JOIN
+ON      YEAR(A.differentiation_date) = B.year	
+ORDER BY year, year_dev;
