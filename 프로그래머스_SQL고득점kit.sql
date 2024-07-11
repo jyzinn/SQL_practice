@@ -584,3 +584,4 @@ INNER JOIN icecream_info AS B
 ON      A.flavor = B.flavor
 GROUP BY B.ingredient_type						-- type별 주문량 집계를 위해 group
 ORDER BY total_order;
+ORDER BY car_type;
