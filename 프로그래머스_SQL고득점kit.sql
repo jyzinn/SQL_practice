@@ -613,3 +613,34 @@ ON      A.book_id = B.book_id
 WHERE   B.sales_date LIKE '2022-01%'		-- 2022년 1월 도서 판매량만 조회
 GROUP BY category							-- 카테고리별 도서 판매량 집계를 위해 group
 ORDER BY category;
+
+/*
+즐겨찾기가 가장 많은 식당 정보 출력하기
+https://school.programmers.co.kr/learn/courses/30/lessons/131123
+*/
+SELECT  food_type,
+        rest_id,
+        rest_name,
+        favorites
+FROM    rest_info
+WHERE   (food_type, favorites) IN (												-- 가장 높은 favorites를 가진 food_type과 일치하는 값만 조회
+                                   SELECT   food_type,
+                                            MAX(favorites) AS max_favorites		-- food_type별 가장 높은 favorites 구하기
+                                   FROM     rest_info
+                                   GROUP BY food_type
+                                  )
+ORDER BY food_type DESC;
+
+WITH maxfavorites AS (SELECT   food_type, MAX(favorites) AS max_favorites		-- food_type별 가장 높은 favorites 구하기
+                       FROM     rest_info
+                       GROUP BY food_type
+                      )
+
+SELECT  A.food_type,
+        A.rest_id,
+        A.rest_name,
+        B.max_favorites
+FROM    rest_info AS A
+INNER JOIN maxfavorites AS B
+ON      A.food_type = B.food_type AND A.favorites = B.max_favorites				-- CTE와 food_type과 favorites로 join
+ORDER BY A.food_type DESC;
