@@ -731,3 +731,17 @@ SELECT  flavor
 FROM    combined_orders
 ORDER BY total_order DESC
 LIMIT   3;
+
+/*
+5월 식품들의 총매출 조회하기
+https://school.programmers.co.kr/learn/courses/30/lessons/131117
+*/
+SELECT  A.product_id,
+        A.product_name,
+        SUM(A.price * B.amount) AS total_sales		-- price * amount로 total sales 구하기
+FROM    food_product AS A
+INNER JOIN food_order AS B
+ON      A.product_id = B.product_id
+WHERE   B.produce_date LIKE '2022-05%'				-- 생산일자가 2022년 5월인 식품만 조회
+GROUP BY A.product_id								-- product_id별 집계를 위해 group
+ORDER BY total_sales DESC, product_id;
