@@ -687,3 +687,20 @@ WHERE   start_date >= '2022-08-01' AND start_date < '2022-11-01'					-- 조건 �
 GROUP BY month, car_id																-- 월별, 자동차별 집계를 위해 group
 HAVING  records > 0																	-- 특정 월의 총 대여 횟수가 0인 경우에는 제외
 ORDER BY month, car_id DESC;
+
+/*
+저자 별 카테고리 별 매출액 집계하기
+https://school.programmers.co.kr/learn/courses/30/lessons/144856
+*/
+SELECT  A.author_id,
+        C.author_name,
+        A.category,
+        SUM(A.price * B.sales) AS total_sales
+FROM    book AS A
+INNER JOIN book_sales AS B
+ON      A.book_id = B.book_id
+INNER JOIN author AS C
+ON      A.author_id = C.author_id
+WHERE   B.sales_date LIKE '2022-01%'
+GROUP BY author_id, category
+ORDER BY author_id, category DESC;
