@@ -644,3 +644,13 @@ FROM    rest_info AS A
 INNER JOIN maxfavorites AS B
 ON      A.food_type = B.food_type AND A.favorites = B.max_favorites				-- CTE와 food_type과 favorites로 join
 ORDER BY A.food_type DESC;
+
+/*
+자동차 대여 기록에서 대여중 / 대여 가능 여부 구분하기
+https://school.programmers.co.kr/learn/courses/30/lessons/157340
+*/
+SELECT  car_id,
+        MAX(IF('2022-10-16' BETWEEN start_date AND end_date, '대여중','대여 가능')) AS availability		-- 2022-10-16에 대여중이라면 대여중, 아니라면 대여가능
+FROM    car_rental_company_rental_history
+GROUP BY car_id
+ORDER BY car_id DESC;
