@@ -600,3 +600,16 @@ WHERE   A.status = 'DONE'				-- 완료된 중고 거래만 조회
 GROUP BY B.user_id						-- 유저의 총 거래 금액 집계를 위해 group
 HAVING  total_sales >= 700000			-- 총 거래 금액이 70만원 이상인 유저만 조회
 ORDER BY total_sales;
+
+/*
+카테고리 별 도서 판매량 집계하기
+https://school.programmers.co.kr/learn/courses/30/lessons/144855
+*/
+SELECT  category,
+        SUM(B.sales) AS total_sales
+FROM    book AS A
+INNER JOIN book_sales AS B
+ON      A.book_id = B.book_id
+WHERE   B.sales_date LIKE '2022-01%'		-- 2022년 1월 도서 판매량만 조회
+GROUP BY category							-- 카테고리별 도서 판매량 집계를 위해 group
+ORDER BY category;
