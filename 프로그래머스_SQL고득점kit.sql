@@ -654,3 +654,14 @@ SELECT  car_id,
 FROM    car_rental_company_rental_history
 GROUP BY car_id
 ORDER BY car_id DESC;
+
+/*
+진료과별 총 예약 횟수 출력하기
+https://school.programmers.co.kr/learn/courses/30/lessons/132202
+*/
+SELECT  mcdp_cd AS '진료과 코드',
+        COUNT(apnt_no) AS '5월예약건수'	-- 진료과 코드별 예약 건수 조회
+FROM    appointment
+WHERE   apnt_ymd LIKE '2022-05%'		-- 2022년 05월 예약만 조회
+GROUP BY mcdp_cd						-- 진료과 코드별 집계를 위해 group
+ORDER BY 2, 1;	
