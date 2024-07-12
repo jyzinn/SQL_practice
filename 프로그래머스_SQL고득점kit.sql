@@ -704,3 +704,30 @@ ON      A.author_id = C.author_id
 WHERE   B.sales_date LIKE '2022-01%'
 GROUP BY author_id, category
 ORDER BY author_id, category DESC;
+
+-- join
+/*
+주문량이 많은 아이스크림들 조회하기
+https://school.programmers.co.kr/learn/courses/30/lessons/133027
+*/
+SELECT  A.flavor
+FROM    first_half AS A
+INNER JOIN july AS B
+ON      A.flavor = B.flavor
+GROUP BY A.flavor
+ORDER BY (SUM(A.total_order) + SUM(B.total_order)) DESC
+LIMIT   3;
+
+WITH combined_orders AS (
+                         SELECT A.flavor, 
+                                SUM(A.total_order) + SUM(B.total_order) AS total_order
+                         FROM   first_half AS A
+                         INNER JOIN july AS B
+                         ON A.flavor = B.flavor
+                         GROUP BY A.flavor
+                        )
+                        
+SELECT  flavor
+FROM    combined_orders
+ORDER BY total_order DESC
+LIMIT   3;
