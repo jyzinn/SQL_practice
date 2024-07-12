@@ -665,3 +665,25 @@ FROM    appointment
 WHERE   apnt_ymd LIKE '2022-05%'		-- 2022년 05월 예약만 조회
 GROUP BY mcdp_cd						-- 진료과 코드별 집계를 위해 group
 ORDER BY 2, 1;	
+
+/*
+대여 횟수가 많은 자동차들의 월별 대여 횟수 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/151139
+*/
+WITH over5 AS (																		-- 조건 기간 동안 5회 이상 대여한 car_id를 CTE로
+               SELECT   car_id
+               FROM     car_rental_company_rental_history
+               WHERE    start_date >= '2022-08-01' AND start_date < '2022-11-01'
+               GROUP BY car_id
+               HAVING   COUNT(history_id) >= 5
+              )
+
+SELECT  MONTH(start_date) AS month,
+        car_id,
+        COUNT(car_id) AS records
+FROM    car_rental_company_rental_history
+WHERE   start_date >= '2022-08-01' AND start_date < '2022-11-01'					-- 조건 기간 동안의 기록을 조회
+        AND car_id IN (SELECT car_id FROM over5)									-- car_id가 CTE에 있는(조건 기간 동안 5회 이상 대여한) 것만 조회
+GROUP BY month, car_id																-- 월별, 자동차별 집계를 위해 group
+HAVING  records > 0																	-- 특정 월의 총 대여 횟수가 0인 경우에는 제외
+ORDER BY month, car_id DESC;
