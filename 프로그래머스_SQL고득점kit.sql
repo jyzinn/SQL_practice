@@ -808,3 +808,15 @@ LEFT JOIN animal_ins AS B
        ON A.animal_id = B.animal_id
 WHERE   B.animal_id IS NULL				-- 입양 보냈으나, 보호소에 들어온 이력이 없는 동물 조회
 ORDER BY 1, 2;
+
+/*
+있었는데요 없었습니다
+https://school.programmers.co.kr/learn/courses/30/lessons/59043
+*/
+SELECT  A.animal_id,
+        A.name
+FROM    animal_ins AS A
+INNER JOIN animal_outs AS B
+        ON A.animal_id = B.animal_id
+WHERE   B.datetime < A.datetime			-- 보호 시작일보다 입양일이 더 빠른 동물 조회
+ORDER BY A.datetime;
