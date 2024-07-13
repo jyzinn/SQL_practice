@@ -765,3 +765,16 @@ WHERE   A.car_type IN ('세단', 'SUV')												-- 세단 혹은 SUV만 조�
                             )
 HAVING  fee BETWEEN 500000 AND 2000000												-- 대여 금액이 50만원 이상 200만원 미만인 자동차
 ORDER BY fee DESC, A.car_type ASC, A.car_id DESC;
+
+/*
+조건에 맞는 도서와 저자 리스트 출력하기
+https://school.programmers.co.kr/learn/courses/30/lessons/144854
+*/
+SELECT  A.book_id,
+        B.author_name,
+        DATE_FORMAT(A.published_date, '%Y-%m-%d') AS published_date
+FROM    book AS A
+INNER JOIN author AS B
+        ON A.author_id = B.author_id
+WHERE   A.category = '경제'
+ORDER BY published_date;
