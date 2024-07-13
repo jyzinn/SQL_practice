@@ -778,3 +778,33 @@ INNER JOIN author AS B
         ON A.author_id = B.author_id
 WHERE   A.category = '경제'
 ORDER BY published_date;
+
+/*
+그룹별 조건에 맞는 식당 목록 출력하기
+https://school.programmers.co.kr/learn/courses/30/lessons/131124
+*/
+SELECT  A.member_name,
+        B.review_text,
+        DATE_FORMAT(B.review_date, '%Y-%m-%d') AS review_date
+FROM    member_profile AS A
+INNER JOIN rest_review AS B
+        ON A.member_id = B.member_id
+WHERE   A.member_id = (SELECT member_id					-- 가장 많은 리뷰 작성자만 조회
+                       FROM   rest_review
+                       GROUP BY member_id
+                       ORDER BY COUNT(member_id) DESC
+                       LIMIT  1 
+                      )
+ORDER BY review_date, review_text;
+
+/*
+없어진 기록 찾기
+https://school.programmers.co.kr/learn/courses/30/lessons/59042
+*/
+SELECT  A.animal_id,
+        A.name
+FROM    animal_outs AS A
+LEFT JOIN animal_ins AS B
+       ON A.animal_id = B.animal_id
+WHERE   B.animal_id IS NULL				-- 입양 보냈으나, 보호소에 들어온 이력이 없는 동물 조회
+ORDER BY 1, 2;
