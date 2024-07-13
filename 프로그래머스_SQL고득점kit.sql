@@ -745,3 +745,23 @@ ON      A.product_id = B.product_id
 WHERE   B.produce_date LIKE '2022-05%'				-- 생산일자가 2022년 5월인 식품만 조회
 GROUP BY A.product_id								-- product_id별 집계를 위해 group
 ORDER BY total_sales DESC, product_id;
+
+/*
+특정 기간동안 대여 가능한 자동차들의 대여비용 구하기
+https://school.programmers.co.kr/learn/courses/30/lessons/157339
+*/
+SELECT  A.car_id,
+        A.car_type,
+        ROUND(A.daily_fee * 30 * (1-C.discount_rate / 100)) AS fee					-- 30일 대여료 조회
+FROM    car_rental_company_car AS A
+INNER JOIN car_rental_company_discount_plan AS C
+ON      A.car_type = C.car_type 
+AND     C.duration_type = '30일 이상'
+WHERE   A.car_type IN ('세단', 'SUV')												-- 세단 혹은 SUV만 조회
+        AND A.car_id NOT IN (SELECT car_id											-- 대여 가능한 자동차만 조회
+                             FROM car_rental_company_rental_history	
+                             WHERE '2022-11-01' BETWEEN start_date AND end_date		
+                             OR '2022-11-30' BETWEEN start_date AND end_date
+                            )
+HAVING  fee BETWEEN 500000 AND 2000000												-- 대여 금액이 50만원 이상 200만원 미만인 자동차
+ORDER BY fee DESC, A.car_type ASC, A.car_id DESC;
