@@ -705,6 +705,38 @@ WHERE   B.sales_date LIKE '2022-01%'
 GROUP BY author_id, category
 ORDER BY author_id, category DESC;
 
+/*
+식품분류별 가장 비싼 식품의 정보 조회하기
+https://school.programmers.co.kr/learn/courses/30/lessons/131116
+*/
+SELECT  category,
+        price AS max_price,
+        product_name
+FROM    food_product
+WHERE   (category, price) IN (												-- 각 카테고리별 최대 가격을 구하는 서브쿼리
+                             SELECT category,
+                                    max(price)
+                             FROM   food_product
+                             WHERE category IN ('과자', '국', '김치', '식용유')
+                             GROUP BY category
+                             )
+ORDER BY max_price DESC;
+
+WITH ranked_products AS (													-- 각 카테고리별로 가격을 기준으로 행에 순위를 매기는 CTE
+                        SELECT  category,
+                                price AS max_price,
+                                product_name,
+                                ROW_NUMBER() OVER (PARTITION BY category ORDER BY price DESC) AS row_num
+                        FROM	food_product
+                        WHERE	category IN ('과자', '국', '김치', '식용유')
+                        )
+SELECT  category,
+        max_price,
+        product_name
+FROM    ranked_products
+WHERE   row_num = 1															-- 순위가 1인 행만 선택 (즉, 각 카테고리별로 가격이 가장 높은 제품)
+ORDER BY max_price DESC;
+
 -- join
 /*
 주문량이 많은 아이스크림들 조회하기
