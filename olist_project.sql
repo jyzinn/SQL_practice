@@ -342,3 +342,96 @@ SELECT	segment,
 FROM	rfm_segment
 GROUP BY segment
 ORDER BY user_count DESC;
+
+-- cohort Analysis
+-- 고객의 첫 주문 날짜 조회
+SELECT	B.customer_unique_id,
+		MIN(A.order_purchase_timestamp) AS first_order_date
+FROM	orders	AS A
+INNER JOIN customers AS B
+ON		A.customer_id = B.customer_id
+GROUP BY B.customer_unique_id;
+
+-- 각 주문의 코호트 기간 및 주문 기간 조회
+-- 고객의 첫 주문 날짜를 기준으로 각 주문의 코호트 기간과 주문 기간을 계산
+WITH first_orders AS (
+					 SELECT	B.customer_unique_id,
+							MIN(A.order_purchase_timestamp) AS first_order_date	-- 고객의 첫 주문 날짜
+					 FROM orders AS A
+                     INNER JOIN customers AS B ON A.customer_id = B.customer_id
+                     GROUP BY B.customer_unique_id
+)
+SELECT	B.customer_unique_id,
+		A.order_purchase_timestamp,
+        DATE_FORMAT(first_orders.first_order_date, '%Y-%m-01') AS cohort_month,										-- 첫 주문 날짜를 기준으로 한 코호트 월
+        DATE_FORMAT(A.order_purchase_timestamp, '%Y-%m-01') AS order_month,											-- 주문 날짜를 기준으로 한 주문 월
+        TIMESTAMPDIFF(MONTH, first_orders.first_order_date, A.order_purchase_timestamp) AS months_since_first_order	-- 첫 주문 이후 경과 월 수
+FROM	orders AS A
+INNER JOIN customers AS B ON A.customer_id = B.customer_id
+INNER JOIN first_orders ON B.customer_unique_id = first_orders.customer_unique_id;
+
+-- 코호트 테이블 생성
+-- 코호트 테이블을 생성하여 각 코호트의 첫 주문 대비 재방문 고객 수 계산
+WITH first_orders AS (
+					 SELECT	B.customer_unique_id,
+							MIN(A.order_purchase_timestamp) AS first_order_date	-- 고객의 첫 주문 날짜
+					 FROM orders AS A
+                     INNER JOIN customers AS B ON A.customer_id = B.customer_id
+                     GROUP BY B.customer_unique_id
+),
+order_cohorts AS (
+				 SELECT	B.customer_unique_id,
+						A.order_purchase_timestamp,
+						DATE_FORMAT(first_orders.first_order_date, '%Y-%m-01') AS cohort_month,										-- 첫 주문 날짜를 기준으로 한 코호트 월
+						DATE_FORMAT(A.order_purchase_timestamp, '%Y-%m-01') AS order_month,											-- 주문 날짜를 기준으로 한 주문 월
+						TIMESTAMPDIFF(MONTH, first_orders.first_order_date, A.order_purchase_timestamp) AS months_since_first_order	-- 첫 주문 이후 경과 월 수
+				 FROM	orders AS A
+                 INNER JOIN customers AS B ON A.customer_id = B.customer_id
+                 INNER JOIN first_orders ON B.customer_unique_id = first_orders.customer_unique_id
+)
+SELECT	cohort_month,
+		months_since_first_order,
+        COUNT(DISTINCT customer_unique_id) AS num_customers	-- 코호트 월, 경과 월 수 별 재방문 고객 수
+FROM	order_cohorts
+GROUP BY cohort_month, months_since_first_order
+ORDER BY cohort_month, months_since_first_order;
+
+-- retention_rate 계산
+-- 각 코호트의 retention_rate 계산
+WITH first_orders AS (
+					 SELECT	B.customer_unique_id,
+							MIN(A.order_purchase_timestamp) AS first_order_date	-- 고객의 첫 주문 날짜
+					 FROM orders AS A
+                     INNER JOIN customers AS B ON A.customer_id = B.customer_id
+                     GROUP BY B.customer_unique_id
+),
+order_cohorts AS (
+				 SELECT	B.customer_unique_id,
+						A.order_purchase_timestamp,
+						DATE_FORMAT(first_orders.first_order_date, '%Y-%m-01') AS cohort_month,										-- 첫 주문 날짜를 기준으로 한 코호트 월
+						DATE_FORMAT(A.order_purchase_timestamp, '%Y-%m-01') AS order_month,											-- 주문 날짜를 기준으로 한 주문 월
+						TIMESTAMPDIFF(MONTH, first_orders.first_order_date, A.order_purchase_timestamp) AS months_since_first_order	-- 첫 주문 이후 경과 월 수
+				 FROM	orders AS A
+                 INNER JOIN customers AS B ON A.customer_id = B.customer_id
+                 INNER JOIN first_orders ON B.customer_unique_id = first_orders.customer_unique_id
+),
+cohort_analysis AS (
+				   SELECT	cohort_month,
+							months_since_first_order,
+							COUNT(DISTINCT customer_unique_id) AS num_customers	-- 코호트 월, 경과 월 수 별 재방문 고객 수
+				   FROM		order_cohorts
+                   GROUP BY cohort_month, months_since_first_order
+                   ORDER BY cohort_month, months_since_first_order
+)
+SELECT	C.cohort_month,											-- 코호트 월
+		C.months_since_first_order,								-- 첫 주문 이후 경과 월 수
+        C.num_customers,										-- 해당 월의 재방문 고객 수
+        C.num_customers / D.num_customers AS retention_rate		-- 특정 코호트의 해당 월 재방문 고객 수 / 특정 코호트의 고객 수
+FROM cohort_analysis AS C
+JOIN (
+	 SELECT	cohort_month,
+			num_customers
+	 FROM	cohort_analysis
+     WHERE	months_since_first_order = 0						-- 첫 주문 시점 필터링
+     ) AS D
+ON	 C.cohort_month = D.cohort_month;
